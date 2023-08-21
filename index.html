@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dataset Visualization</title>
+    <!-- Import Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <h1>Dataset Visualization</h1>
+    
+    <label for="dataset">Select Dataset:</label>
+    <select id="dataset">
+        <option value="YouTube">YouTube</option>
+        <option value="Twitter">Twitter</option>
+        <option value="SMS">SMS</option>
+    </select>
+    
+    <label for="plotFunction">Select Plot Function:</label>
+    <select id="plotFunction">
+        <option value="Histogram">Histogram</option>
+        <option value="Scatter">Scatter</option>
+    </select>
+    
+    <label for="colorScheme">Select Color Scheme:</label>
+    <select id="colorScheme">
+        <option value="Viridis">Viridis</option>
+        <option value="Plasma">Plasma</option>
+        <option value="Inferno">Inferno</option>
+    </select>
+    
+    <button id="generateButton">Generate Plot</button>
+    
+    <div id="plotContainer"></div>
+    
+    <script src="app.js"></script>
+</body>
+</html>
