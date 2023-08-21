@@ -39,7 +39,7 @@ def youTube_ds():
 st.title("Dataset Visualization")
 # Function to clean text data
 # n=30
-n = st.slider("Select the number of words to keep with the clean data:", min_value=30, max_value=250, step=50, value=10)
+n = st.slider("Select the number of words to keep with the clean data:", min_value=30, max_value=250, step=50, value=50)
 def clean_dataset(sentence, n=n): 
     stop_words = set(stopwords.words('english'))
     sentence = sentence.translate(str.maketrans('', '', string.punctuation))
