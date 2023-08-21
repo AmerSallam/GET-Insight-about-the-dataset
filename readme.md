@@ -37,6 +37,5 @@ For an interactive and dynamic data visualization experience, you possess the fl
 streamlit run data_visualization.py
 ```
 
-Upon executing this command, a web-based application will be launched. This application empowers you to seamlessly explore and visualize your data in alignment with your designated preferences. The resulting visual depiction is depicted in the accompanying illustration:
-
+Upon executing this command, a web-based application will be launched. This application empowers you to seamlessly explore and visualize your data in alignment with your designated preferences. The resulting visualization can be observed in the Figure below:
 ![Visualization](images/data_visualization.png)
