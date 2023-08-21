@@ -90,8 +90,8 @@ def plot_histogram(df, dataset_name, column_name, title_prefix):
     fig.show()
 
      # Save the plot to the images directory
-    image_path = os.path.join(images_dir, f"{dataset_name}_plot.png")
-    fig.write_image(image_path, format="png")
+    # image_path = os.path.join(images_dir, f"{dataset_name}_plot.png")
+    # fig.write_image(image_path, format="png")
 
     
 
