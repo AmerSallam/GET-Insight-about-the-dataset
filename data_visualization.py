@@ -5,7 +5,6 @@ import plotly.express as px
 import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
-import matplotlib.pyplot as plt
 
 # Download NLTK resources
 nltk.download('punkt')
@@ -44,43 +43,15 @@ def clean_dataset(sentence):
     cleaned_sentence = [word for word in tokens if word not in stop_words]
     return " ".join(cleaned_sentence[:30])
 
-# Streamlit app
-def main():
-    st.title("Dataset Visualization App")
-    
-    # Load datasets
-    SMS_dataset_name, df_sms = SMS_ds()
-    TW_dataset_name, df_twitter = Twitter_ds()
-    YT_dataset_name, df_youtube = youTube_ds()
-    
-    # Preprocess data
-    df_youtube["cleaned_message"] = df_youtube["message"].apply(clean_dataset)
-    df_twitter["cleaned_message"] = df_twitter["message"].apply(clean_dataset)
-    df_sms["cleaned_message"] = df_sms["message"].apply(clean_dataset)
-    
-    # Select dataset and column
-    dataset_option = st.selectbox("Select Dataset", [YT_dataset_name, TW_dataset_name, SMS_dataset_name])
-    column_option = st.selectbox("See the ditrbution of the dataset before or after preprocessing", ['Before Processing', 'After Processing'])
-    
-    # Plot options
-    plot_options = st.selectbox("Select Plot Function", ['Histogram', 'Scatter'])
-    color_scheme = st.selectbox("Select Color Scheme", px.colors.named_colorscales())
-    
+# Load datasets
+SMS_dataset_name, df_sms = SMS_ds()
+TW_dataset_name, df_twitter = Twitter_ds()
+YT_dataset_name, df_youtube = youTube_ds()
 
-     
-  # Display plot based on user selections
-    if plot_options == 'Histogram':
-        if column_option == 'Before Processing':
-            plot_histogram(df_sms, dataset_option, 'message', column_option, color_scheme)
-        elif column_option == 'After Processing':
-            plot_histogram(df_sms, dataset_option, 'cleaned_message', column_option, color_scheme)
-
-            
-    elif plot_options == 'Scatter':
-        if column_option == 'Before Processing':
-            plot_scatter(df_sms, dataset_option, 'message', column_option, color_scheme)
-        elif column_option == 'After Processing':
-            plot_scatter(df_sms, dataset_option, 'cleaned_message', column_option, color_scheme)
+# Preprocess data
+df_youtube["cleaned_message"] = df_youtube["message"].apply(clean_dataset)
+df_twitter["cleaned_message"] = df_twitter["message"].apply(clean_dataset)
+df_sms["cleaned_message"] = df_sms["message"].apply(clean_dataset)
 
 # Scatter plot function
 def plot_scatter(df, dataset_name, column_name, title_prefix, color_scheme):
@@ -106,11 +77,6 @@ def plot_scatter(df, dataset_name, column_name, title_prefix, color_scheme):
 
     st.plotly_chart(fig)
 
-
-
-
-
-
 # Bar plot function
 def plot_histogram(df, dataset_name, column_name, title_prefix, color_scheme):
     word_counts = df[column_name].apply(lambda x: len(word_tokenize(x)))
@@ -126,10 +92,43 @@ def plot_histogram(df, dataset_name, column_name, title_prefix, color_scheme):
         labels={"x": "Instance Length (Number of Words)", "y": "Frequency"}
     )
 
-    # ... (rest of the plot layout customization)
-
     st.plotly_chart(fig)
+
+# Streamlit app
+def main():
+    st.title("Dataset Visualization App")
+
+    # Select dataset and column
+    dataset_option = st.selectbox("Select Dataset", [YT_dataset_name, TW_dataset_name, SMS_dataset_name])
+    column_option = st.selectbox("See the distribution of the dataset before or after preprocessing", ['Before Processing', 'After Processing'])
     
+    # Plot options
+    plot_options = st.selectbox("Select Plot Function", ['Histogram', 'Scatter'])
+    color_scheme = st.selectbox("Select Color Scheme", px.colors.named_colorscales())
+
+    # Display plot based on user selections
+    if plot_options == 'Histogram':
+        if column_option == 'Before Processing':
+            plot_histogram(get_dataframe(dataset_option), dataset_option, 'message', column_option, color_scheme)
+        elif column_option == 'After Processing':
+            plot_histogram(get_dataframe(dataset_option), dataset_option, 'cleaned_message', column_option, color_scheme)
+    elif plot_options == 'Scatter':
+        if column_option == 'Before Processing':
+            plot_scatter(get_dataframe(dataset_option), dataset_option, 'message', column_option, color_scheme)
+        elif column_option == 'After Processing':
+            plot_scatter(get_dataframe(dataset_option), dataset_option, 'cleaned_message', column_option, color_scheme)
+
+# Function to get the appropriate DataFrame based on the selected dataset
+def get_dataframe(dataset_name):
+    if dataset_name == SMS_dataset_name:
+        return df_sms
+    elif dataset_name == TW_dataset_name:
+        return df_twitter
+    elif dataset_name == YT_dataset_name:
+        return df_youtube
+
 # Run the Streamlit app
 if __name__ == "__main__":
     main()
+
+###
