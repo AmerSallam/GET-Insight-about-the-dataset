@@ -42,14 +42,19 @@ def clean_dataset(sentence):
     cleaned_sentence = [word for word in tokens if word not in stop_words]
     return " ".join(cleaned_sentence[:30])
 
-# Function to plot histograms
+
 def plot_histogram(df, dataset_name, column_name, title_prefix):
-    # Creates a histogram using Plotly Express based on the length of words in a specified column of a DataFrame. It customizes the layout and displays the histogram.
+    # Creates a bar chart using Plotly Express based on the length of words in a specified column of a DataFrame. It customizes the layout and displays the chart.
     word_counts = df[column_name].apply(lambda x: len(word_tokenize(x)))
 
-    fig = px.histogram(
-        x=word_counts,
-        nbins=max(word_counts) - min(word_counts) + 1,
+    # Calculate frequency distribution of word counts
+    word_counts_freq = word_counts.value_counts().sort_index()
+
+    fig = px.bar(
+        x=word_counts_freq.index,
+        y=word_counts_freq,
+        color=word_counts_freq,  # Set the color to be based on word counts
+        color_continuous_scale='Viridis',  # Choose a color scale
         title=f"The distribution of the {dataset_name} dataset based on the number of words in each instance {title_prefix} preprocessing",
         labels={"x": "Instance Length (Number of Words)", "y": "Frequency"}
     )
@@ -62,10 +67,29 @@ def plot_histogram(df, dataset_name, column_name, title_prefix):
         font=dict(size=14),
         width=1200,
         height=500,
+        
     )
 
-    fig.update_layout(xaxis=dict(tickmode='linear', tick0=min(word_counts), dtick=10))
+    if column_name == 'message':
+        fig.update_layout(xaxis=dict(tickmode='linear', tick0=min(word_counts), dtick=10))
+    else:
+        fig.update_layout(xaxis=dict(tickmode='linear', tick0=min(word_counts), dtick=1))
+
+        
+    
+    # Add text labels to the bars and set bar mode to 'relative'
+    fig.update_traces(text=word_counts_freq.values, textposition='outside')
+    fig.update_layout(barmode='relative')
+
+    # Update tick length for x-axis
+    fig.update_xaxes(ticklen=30)
+    
+    # Update color axis label
+    fig.update_coloraxes(colorbar_title="Frequency")
+    
     fig.show()
+
+
 
 
 def find_min_max_instance_length(df, column_index):
@@ -141,12 +165,17 @@ print(find_min_max_instance_length(df_sms, 0))
 print("SMS Dataset Info. after preprocessing:")
 print(find_min_max_instance_length(df_sms, 2))
 
-# Plot histograms before preprocessing
+# Plot histograms before and after  preprocessing
 plot_histogram(df_youtube, YT_dataset_name, 'message', 'before')
+plot_histogram(df_youtube, YT_dataset_name, 'cleaned_message', 'after')
+
 plot_histogram(df_twitter, TW_dataset_name, 'message', 'before')
+
+plot_histogram(df_twitter, TW_dataset_name, 'cleaned_message', 'after')
+
 plot_histogram(df_sms, SMS_dataset_name, 'message', 'before')
+plot_histogram(df_sms, SMS_dataset_name, 'cleaned_message', 'after')
 
 # Plot histograms after preprocessing
-plot_histogram(df_youtube, YT_dataset_name, 'cleaned_message', 'after')
-plot_histogram(df_twitter, TW_dataset_name, 'cleaned_message', 'after')
-plot_histogram(df_sms, SMS_dataset_name, 'cleaned_message', 'after')
+
+
