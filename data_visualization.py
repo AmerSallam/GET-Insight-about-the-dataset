@@ -35,13 +35,17 @@ def youTube_ds():
     df.rename({"CLASS": "label", "CONTENT": "message"}, axis=1, inplace=True)
     return dataset_name, df
 
+
+st.title("Dataset Visualization")
 # Function to clean text data
-def clean_dataset(sentence): 
+# n=30
+n = st.slider("Select the number of words to keep with the clean data:", min_value=30, max_value=250, step=50, value=10)
+def clean_dataset(sentence, n=n): 
     stop_words = set(stopwords.words('english'))
     sentence = sentence.translate(str.maketrans('', '', string.punctuation))
     tokens = word_tokenize(sentence)
     cleaned_sentence = [word for word in tokens if word not in stop_words]
-    return " ".join(cleaned_sentence[:30])
+    return " ".join(cleaned_sentence[:n])
 
 # Load datasets
 SMS_dataset_name, df_sms = SMS_ds()
@@ -50,8 +54,7 @@ YT_dataset_name, df_youtube = youTube_ds()
 
 # Preprocess data
 # @st.cache_data
-# def preprocess_data():
-#     print('Please wait while processing the data')
+# def preprocess_data()
 
 
 # def preprocess_data():
@@ -116,11 +119,12 @@ def get_dataframe(dataset_name):
 
 # Streamlit app
 def main():
-    st.title("Dataset Visualization")
+    # st.title("Dataset Visualization")
+    
 
     # Select dataset
     dataset_option = st.selectbox("Select Dataset", [YT_dataset_name, TW_dataset_name, SMS_dataset_name])
-
+    # n = st.slider("Select the number of words to keep with the pre-processed data:", min_value=30, max_value=250, step=50, value=10)
     # Plot options
     plot_options = st.selectbox("Select Plot Function", ['Histogram', 'Scatter'])
     color_scheme = st.selectbox("Select Color Scheme", px.colors.named_colorscales())
