@@ -89,8 +89,11 @@ def plot_histogram(df, dataset_name, column_name, title_prefix):
     
     fig.show()
 
+     # Save the plot to the images directory
+    image_path = os.path.join(images_dir, f"{dataset_name}_plot.png")
+    fig.write_image(image_path, format="png")
 
-
+    
 
 def find_min_max_instance_length(df, column_index):
     # For a specified column in a DataFrame, this function finds the instance with the maximum and minimum lengths, along with their details. It returns a DataFrame with this information.
@@ -164,6 +167,8 @@ print("\nSMS Dataset Info. before preprocessing:")
 print(find_min_max_instance_length(df_sms, 0))
 print("SMS Dataset Info. after preprocessing:")
 print(find_min_max_instance_length(df_sms, 2))
+
+
 
 # Plot histograms before and after  preprocessing
 plot_histogram(df_youtube, YT_dataset_name, 'message', 'before')
