@@ -26,3 +26,17 @@ This code performs several tasks related to data analysis and visualization usin
 9. **Output**: The code outputs printed information about instance lengths, and it displays histograms for each dataset both before and after preprocessing.
 
 Overall, the code demonstrates how to load, preprocess, analyze, and visualize text data from different datasets using Python libraries. It's particularly focused on instance length analysis and provides insights into how data preprocessing can affect analysis and visualization outcomes.
+
+
+
+
+
+For an interactive and dynamic data visualization experience, you possess the flexibility to select your preferred dataset, opt for a specific plotting function, choose a color scheme for the visualization, and even determine the length of the cleaned data instances. To set this visualization in motion, simply run the `data_visualization.py` file using the ensuing command:
+
+```
+streamlit run data_visualization.py
+```
+
+Upon executing this command, a web-based application will be launched. This application empowers you to seamlessly explore and visualize your data in alignment with your designated preferences. The resulting visual depiction is depicted in the accompanying illustration:
+
+![Visualization](images/data_visualization.png)
