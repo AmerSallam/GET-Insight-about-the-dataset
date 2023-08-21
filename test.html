@@ -4,115 +4,90 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dataset Visualization</title>
-    <!-- Include Plotly.js library -->
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <!-- Include D3 library -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
   </head>
   <body>
-    <h1>Dataset Visualization</h1>
-    <label for="dataset">Select Dataset:</label>
-    <select id="dataset">
-      <option value="SMS">SMS</option>
-      <option value="Twitter">Twitter</option>
-      <option value="YouTube">YouTube</option>
-    </select>
-    <br />
-    <label for="plotFunction">Select Plot Function:</label>
-    <select id="plotFunction">
-      <option value="Histogram">Histogram</option>
-      <option value="Scatter">Scatter</option>
-    </select>
-    <br />
-    <label for="colorScheme">Select Color Scheme:</label>
-    <select id="colorScheme">
-      <option value="Viridis">Viridis</option>
-      <option value="Plasma">Plasma</option>
-      <option value="Inferno">Inferno</option>
-      <!-- Add more color schemes as needed -->
-    </select>
-    <br />
-    <button id="generateButton">Generate Plot</button>
-    <div id="plotContainer"></div>
+    <div id="app">
+      <h1>Dataset Visualization</h1>
+      <div>
+        <label for="numWords"
+          >Select the number of words to keep with the clean data:</label
+        >
+        <input
+          type="range"
+          id="numWords"
+          min="30"
+          max="250"
+          step="50"
+          value="10"
+        />
+        <span id="numWordsValue">10</span>
+      </div>
+      <div>
+        <label for="datasetSelect">Select Dataset:</label>
+        <select id="datasetSelect">
+          <option value="YouTube">YouTube</option>
+          <option value="Twitter">Twitter</option>
+          <option value="SMS">SMS</option>
+        </select>
+      </div>
+      <div>
+        <label for="plotSelect">Select Plot Function:</label>
+        <select id="plotSelect">
+          <option value="Histogram">Histogram</option>
+          <option value="Scatter">Scatter</option>
+        </select>
+      </div>
+      <div>
+        <label for="colorSelect">Select Color Scheme:</label>
+        <select id="colorSelect">
+          <option value="Viridis">Viridis</option>
+          <option value="Plasma">Plasma</option>
+          <option value="Inferno">Inferno</option>
+          <!-- Add more color scheme options if needed -->
+        </select>
+      </div>
+      <div id="plot"></div>
+    </div>
     <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const generateButton = document.getElementById("generateButton");
-        generateButton.addEventListener("click", generatePlot);
-      });
-
-      function generatePlot() {
-        const datasetOption = document.getElementById("dataset").value;
-        const plotFunction = document.getElementById("plotFunction").value;
-        const colorScheme = document.getElementById("colorScheme").value;
-
-        fetchPlotData(datasetOption, plotFunction, colorScheme);
+      // Function to clean text data
+      function cleanDataset(sentence, n) {
+        const stopWords = new Set([]); // Define your stop words here
+        const cleanedTokens = sentence
+          .replace(/[^\w\s]|_/g, "")
+          .split(/\s+/)
+          .filter((word) => !stopWords.has(word));
+        return cleanedTokens.slice(0, n).join(" ");
       }
 
-      function fetchPlotData(datasetOption, plotFunction, colorScheme) {
-        // Implement your data fetching logic here using JavaScript
-        // Replace the following with actual fetched data
-        const data = {}; // Replace with fetched data
-        const cleanedData = {}; // Replace with fetched cleaned data
+      // Sample data loading and preprocessing
+      // Replace with your actual data loading logic
+      const datasets = {
+        SMS: { message: "This is a sample SMS message." },
+        Twitter: { message: "This is a sample Twitter message." },
+        YouTube: { message: "This is a sample YouTube comment." },
+      };
+      const selectedDataset = "YouTube"; // Change to user-selected dataset
 
-        if (plotFunction === "Histogram") {
-          plotHistogram(data, datasetOption, "message", colorScheme);
-          plotHistogram(
-            cleanedData,
-            datasetOption,
-            "cleaned_message",
-            colorScheme
-          );
-        } else if (plotFunction === "Scatter") {
-          plotScatter(data, datasetOption, "message", colorScheme);
-          plotScatter(
-            cleanedData,
-            datasetOption,
-            "cleaned_message",
-            colorScheme
-          );
-        }
-      }
+      const n = parseInt(document.getElementById("numWords").value);
+      const cleanedMessage = cleanDataset(datasets[selectedDataset].message, n);
 
-      function plotHistogram(data, datasetName, columnName, colorScheme) {
-        const wordCounts = data[columnName].map(
-          (message) => message.split(" ").length
-        );
+      // Sample scatter plot
+      const svg = d3
+        .select("#plot")
+        .append("svg")
+        .attr("width", 800)
+        .attr("height", 400);
 
-        const trace = {
-          x: wordCounts,
-          type: "histogram",
-          colorscale: colorScheme,
-          xaxis: "x",
-          yaxis: "y",
-          title: `The distribution of the ${datasetName} dataset based on the number of words in each instance (${columnName})`,
-          xaxis_title: "Instance Length (Number of Words)",
-          yaxis_title: "Frequency",
-        };
+      svg
+        .append("circle")
+        .attr("cx", 100)
+        .attr("cy", 100)
+        .attr("r", 50)
+        .attr("fill", "blue");
 
-        Plotly.newPlot("plotContainer", [trace]);
-      }
-
-      function plotScatter(data, datasetName, columnName, colorScheme) {
-        const wordCounts = data[columnName].map(
-          (message) => message.split(" ").length
-        );
-
-        const trace = {
-          x: wordCounts,
-          y: wordCounts,
-          mode: "markers",
-          marker: {
-            color: wordCounts,
-            colorscale: colorScheme,
-          },
-          type: "scatter",
-          title: `The scatter plot of the ${datasetName} dataset based on the number of words in each instance (${columnName})`,
-          xaxis: "x",
-          yaxis: "y",
-          xaxis_title: "Instance Index",
-          yaxis_title: "Instance Length (Number of Words)",
-        };
-
-        Plotly.newPlot("plotContainer", [trace]);
-      }
+      // Add more visualization logic using D3 here
     </script>
   </body>
 </html>
