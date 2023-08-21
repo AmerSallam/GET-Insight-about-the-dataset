@@ -49,12 +49,22 @@ TW_dataset_name, df_twitter = Twitter_ds()
 YT_dataset_name, df_youtube = youTube_ds()
 
 # Preprocess data
+# @st.cache_data
+# def preprocess_data():
+#     print('Please wait while processing the data')
+
+
+# def preprocess_data():
 df_youtube["cleaned_message"] = df_youtube["message"].apply(clean_dataset)
 df_twitter["cleaned_message"] = df_twitter["message"].apply(clean_dataset)
 df_sms["cleaned_message"] = df_sms["message"].apply(clean_dataset)
 
+# preprocess_data()
+
+
+
 # Scatter plot function
-def plot_scatter(df, dataset_name, column_name, title_prefix, color_scheme):
+def plot_scatter(df, dataset_name, column_name, color_scheme):
     word_counts = df[column_name].apply(lambda x: len(word_tokenize(x)))
 
     fig = px.scatter(
@@ -62,7 +72,7 @@ def plot_scatter(df, dataset_name, column_name, title_prefix, color_scheme):
         y=word_counts,
         color=word_counts,  
         color_continuous_scale=color_scheme,
-        title=f"The scatter plot of the {dataset_name} dataset based on the number of words in each instance {title_prefix} preprocessing",
+        title=f"The scatter plot of the {dataset_name} dataset based on the number of words in each instance",
         labels={"x": "Instance Index", "y": "Instance Length (Number of Words)"}
     )
 
@@ -78,7 +88,8 @@ def plot_scatter(df, dataset_name, column_name, title_prefix, color_scheme):
     st.plotly_chart(fig)
 
 # Bar plot function
-def plot_histogram(df, dataset_name, column_name, title_prefix, color_scheme):
+
+def plot_histogram(df, dataset_name, column_name, color_scheme):
     word_counts = df[column_name].apply(lambda x: len(word_tokenize(x)))
 
     word_counts_freq = word_counts.value_counts().sort_index()
@@ -88,35 +99,11 @@ def plot_histogram(df, dataset_name, column_name, title_prefix, color_scheme):
         y=word_counts_freq,
         color=word_counts_freq,  
         color_continuous_scale=color_scheme,
-        title=f"The distribution of the {dataset_name} dataset based on the number of words in each instance {title_prefix} preprocessing",
+        title=f"The distribution of the {dataset_name} dataset based on the number of words in each instance",
         labels={"x": "Instance Length (Number of Words)", "y": "Frequency"}
     )
 
     st.plotly_chart(fig)
-
-# Streamlit app
-def main():
-    st.title("Dataset Visualization App")
-
-    # Select dataset and column
-    dataset_option = st.selectbox("Select Dataset", [YT_dataset_name, TW_dataset_name, SMS_dataset_name])
-    column_option = st.selectbox("See the distribution of the dataset before or after preprocessing", ['Before Processing', 'After Processing'])
-    
-    # Plot options
-    plot_options = st.selectbox("Select Plot Function", ['Histogram', 'Scatter'])
-    color_scheme = st.selectbox("Select Color Scheme", px.colors.named_colorscales())
-
-    # Display plot based on user selections
-    if plot_options == 'Histogram':
-        if column_option == 'Before Processing':
-            plot_histogram(get_dataframe(dataset_option), dataset_option, 'message', column_option, color_scheme)
-        elif column_option == 'After Processing':
-            plot_histogram(get_dataframe(dataset_option), dataset_option, 'cleaned_message', column_option, color_scheme)
-    elif plot_options == 'Scatter':
-        if column_option == 'Before Processing':
-            plot_scatter(get_dataframe(dataset_option), dataset_option, 'message', column_option, color_scheme)
-        elif column_option == 'After Processing':
-            plot_scatter(get_dataframe(dataset_option), dataset_option, 'cleaned_message', column_option, color_scheme)
 
 # Function to get the appropriate DataFrame based on the selected dataset
 def get_dataframe(dataset_name):
@@ -127,8 +114,25 @@ def get_dataframe(dataset_name):
     elif dataset_name == YT_dataset_name:
         return df_youtube
 
+# Streamlit app
+def main():
+    st.title("Dataset Visualization")
+
+    # Select dataset
+    dataset_option = st.selectbox("Select Dataset", [YT_dataset_name, TW_dataset_name, SMS_dataset_name])
+
+    # Plot options
+    plot_options = st.selectbox("Select Plot Function", ['Histogram', 'Scatter'])
+    color_scheme = st.selectbox("Select Color Scheme", px.colors.named_colorscales())
+
+    # Display plot based on user selections
+    if plot_options == 'Histogram':
+        plot_histogram(get_dataframe(dataset_option), dataset_option, 'message', color_scheme)
+        plot_histogram(get_dataframe(dataset_option), dataset_option, 'cleaned_message', color_scheme)
+    elif plot_options == 'Scatter':
+        plot_scatter(get_dataframe(dataset_option), dataset_option, 'message', color_scheme)
+        plot_scatter(get_dataframe(dataset_option), dataset_option, 'cleaned_message', color_scheme)
+
 # Run the Streamlit app
 if __name__ == "__main__":
     main()
-
-###
