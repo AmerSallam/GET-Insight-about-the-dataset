@@ -16,12 +16,12 @@ This code performs several tasks related to data analysis and visualization usin
 
 8. **Histogram Visualization**: The code uses the `plot_histogram` function to create histograms of instance lengths before and after preprocessing for each dataset. It uses Plotly Express to visualize these histograms.
 
-![Local Image](images/plot0.png)
 ![Local Image](images/plot1.png)
 ![Local Image](images/plot2.png)
 ![Local Image](images/plot3.png)
 ![Local Image](images/plot4.png)
 ![Local Image](images/plot5.png)
+![Local Image](images/plot6.png)
 
 9. **Output**: The code outputs printed information about instance lengths, and it displays histograms for each dataset both before and after preprocessing.
 
